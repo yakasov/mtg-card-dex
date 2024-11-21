@@ -1,47 +1,74 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div id="app">
+    <Sidebar @user-selected="handleSetSelected" />
+    <Body :set="selectedSet" @card-selected="handleCardSelected" />
+    <RightPanel
+      :card="selectedCard"
+      :isOpen="isPanelOpen"
+      @close-panel="handleClosePanel"
+    />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script>
+import Sidebar from "./components/Sidebar.vue";
+import Body from "./components/Body.vue";
+import RightPanel from "./components/RightPanel.vue";
+
+export default {
+  name: "App",
+  components: {
+    Sidebar,
+    Body,
+    RightPanel,
+  },
+  created() {
+    console.log("Go fetch!");
+    this.$store.dispatch("fetchData");
+  },
+  data() {
+    return {
+      selectedCard: null,
+      selectedSet: null,
+      isPanelOpen: false,
+    };
+  },
+  methods: {
+    handleSetSelected(set) {
+      this.selectedSet = set;
+    },
+    handleCardSelected(card) {
+      this.selectedCard = card;
+      this.isPanelOpen = true;
+    },
+    handleClosePanel() {
+      this.isPanelOpen = false;
+    },
+  },
+};
+</script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+#app {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.sidebar {
+  z-index: 1;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.body-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  position: relative;
 }
 </style>
