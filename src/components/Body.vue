@@ -19,7 +19,7 @@ export default {
   name: "Body",
   props: {
     set: {
-      type: String,
+      type: Object,
       required: false,
     },
   },
@@ -29,13 +29,24 @@ export default {
     };
   },
   watch: {
-    set(newSet) {
-      this.loadCards(newSet);
+    set(obj) {
+      this.loadCards(obj);
     },
   },
   methods: {
-    loadCards(set) {
-      this.cards = this.$store.getters.getCache[set];
+    loadCards(obj) {
+      const cacheDict = this.$store.getters.getCache[obj.set];
+      const userCards = this.$store.getters.getCards[obj.user][obj.set];
+      const cacheCards = [];
+
+      Object.entries(cacheDict).forEach(([k, v]) => {
+        cacheCards.push({ 
+          image: userCards.includes(v.id) ? v.image : "src/assets/unknown.png",
+          title: v.name,
+         })
+      })
+
+      this.cards = cacheCards
     },
     selectCard(card) {
       this.$emit("card-selected", card);

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Sidebar @user-selected="handleSetSelected" />
-    <Body :set="selectedSet" @card-selected="handleCardSelected" />
+    <Body :set="{set: selectedSet, user: selectedUser}" @card-selected="handleCardSelected" />
     <RightPanel
       :card="selectedCard"
       :isOpen="isPanelOpen"
@@ -30,12 +30,14 @@ export default {
     return {
       selectedCard: null,
       selectedSet: null,
+      selectedUser: null,
       isPanelOpen: false,
     };
   },
   methods: {
-    handleSetSelected(set) {
-      this.selectedSet = set;
+    handleSetSelected(obj) {
+      this.selectedSet = obj.set;
+      this.selectedUser = obj.user;
     },
     handleCardSelected(card) {
       this.selectedCard = card;

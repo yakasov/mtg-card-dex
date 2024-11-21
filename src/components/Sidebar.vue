@@ -9,7 +9,7 @@
           <li
             v-for="(set, setIndex) in user.sets"
             :key="setIndex"
-            @click="selectSet(set)"
+            @click="selectSet(user.title, set)"
             class="sub-item"
           >
             {{ set }}
@@ -37,8 +37,8 @@ export default {
     toggleExpand(index) {
       this.items[index].expanded = !this.items[index].expanded;
     },
-    selectSet(set) {
-      this.$emit("user-selected", set);
+    selectSet(user, set) {
+      this.$emit("user-selected", { user, set });
     },
   },
   watch: {
