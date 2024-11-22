@@ -3,16 +3,16 @@
     <ul>
       <li v-for="(user, index) in items" :key="index">
         <div @click="toggleExpand(index)" class="sidebar-item">
-          {{ user.title }}
+          {{ user.name }}
         </div>
         <ul v-if="user.expanded" class="sub-list">
           <li
             v-for="(set, setIndex) in user.sets"
             :key="setIndex"
-            @click="selectSet(user.title, set)"
+            @click="selectSet(user.title, set.code)"
             class="sub-item"
           >
-            {{ set }}
+            {{ set.name }} ({{ set.code }})
           </li>
         </ul>
       </li>
@@ -22,6 +22,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { allSets, userNames } from "../data";
 
 export default {
   name: "Sidebar",
@@ -48,10 +49,13 @@ export default {
         if (!newUsers || !newUsers.length) return;
         this.items = newUsers.map((u) => {
           return {
+            name: userNames[u],
             title: u,
-            sets: Object.keys(this.$store.getters.getCards[u] || {}).filter(
-              (k) => k !== "netWorth"
-            ),
+            sets: Object.keys(this.$store.getters.getCards[u] || {})
+              .filter((k) => k !== "netWorth")
+              .map((sc) => {
+                return { code: sc, name: allSets[sc].name };
+              }),
             expanded: false,
           };
         });

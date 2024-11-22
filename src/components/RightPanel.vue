@@ -3,7 +3,7 @@
     <button class="close-btn" @click="closePanel">✖</button>
     <div v-if="card">
       <h2>{{ card.title }}</h2>
-      <img :src="card.image" :alt="card.title" />
+      <img :src="card.bigImage" :alt="card.title" />
       <p>{{ card.description }}</p>
     </div>
   </div>
