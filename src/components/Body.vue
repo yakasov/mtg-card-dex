@@ -15,10 +15,11 @@
         :key="index"
         @click="selectCard(card)"
       >
-        <div class="card-title">{{ card.title }}</div>
+        <div class="card-title">{{ card.name }}</div>
         <div class="card-image">
-          <img :src="card.image" :alt="card.title" />
+          <img :src="card.image" :alt="card.name" />
         </div>
+        <div class="card-number">{{ card.number }}</div>
       </div>
     </div>
   </div>
@@ -56,8 +57,11 @@ export default {
         const imageUrl = userCards.includes(v.id) ? v.image : unknownImage;
         cacheCards.push({
           bigImage: imageUrl,
+          flavour_text: v.flavour_text,
           image: imageUrl.replace("normal", "small"),
-          title: v.name,
+          oracle_text: v.oracle_text,
+          name: v.name,
+          number: k,
         });
       });
 
@@ -70,7 +74,7 @@ export default {
     filterCards() {
       const query = this.searchQuery.toLowerCase();
       this.filteredCards = this.cards.filter((card) =>
-        card.title.toLowerCase().includes(query)
+        card.name.toLowerCase().includes(query)
       );
     },
   },
@@ -82,6 +86,8 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .body-content {
@@ -118,6 +124,7 @@ export default {
   aspect-ratio: 3 / 4;
   max-width: 360px;
   max-height: 480px;
+  position: relative;
 }
 
 .card:hover {
@@ -132,6 +139,17 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.card-number {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 4px;
 }
 
 .card-image img {

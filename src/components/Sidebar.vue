@@ -9,10 +9,11 @@
           <li
             v-for="(set, setIndex) in user.sets"
             :key="setIndex"
-            @click="selectSet(user.title, set.code)"
+            @click="selectSet(user.id, set.code)"
             class="sub-item"
           >
-            {{ set.name }} ({{ set.code }})
+            <p style="color: #ffffff">{{ set.name }}</p>
+            ({{ set.code }}, {{ getCountString(user.id, set.code) }})
           </li>
         </ul>
       </li>
@@ -35,6 +36,11 @@ export default {
     };
   },
   methods: {
+    getCountString(id, set) {
+      const left = this.$store.getters.getCards[id][set].length;
+      const right = Object.keys(this.$store.getters.getCache[set]).length;
+      return `${left}/${right}`;
+    },
     toggleExpand(index) {
       this.items[index].expanded = !this.items[index].expanded;
     },
@@ -49,8 +55,8 @@ export default {
         if (!newUsers || !newUsers.length) return;
         this.items = newUsers.map((u) => {
           return {
+            id: u,
             name: userNames[u],
-            title: u,
             sets: Object.keys(this.$store.getters.getCards[u] || {})
               .filter((k) => k !== "netWorth")
               .map((sc) => {
