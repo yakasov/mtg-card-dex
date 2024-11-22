@@ -54,7 +54,7 @@ export default {
       Object.entries(cacheDict).forEach(([k, v]) => {
         const imageUrl = userCards.includes(v.id)
           ? v.image
-          : "src/assets/unknown.png";
+          : "./assets/unknown.png";
         cacheCards.push({
           bigImage: imageUrl,
           image: imageUrl.replace("normal", "small"),
