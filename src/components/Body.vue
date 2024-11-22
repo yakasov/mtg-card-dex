@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import unknownImage from "@/assets/unknown.png";
 export default {
   name: "Body",
   props: {
@@ -52,9 +53,7 @@ export default {
       const cacheCards = [];
 
       Object.entries(cacheDict).forEach(([k, v]) => {
-        const imageUrl = userCards.includes(v.id)
-          ? v.image
-          : "./assets/unknown.png";
+        const imageUrl = userCards.includes(v.id) ? v.image : unknownImage;
         cacheCards.push({
           bigImage: imageUrl,
           image: imageUrl.replace("normal", "small"),
