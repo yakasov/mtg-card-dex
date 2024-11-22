@@ -3,5 +3,8 @@ import "./assets/main.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 import store from "./store";
+import register from "./import"
 
-createApp(App).use(store).mount("#app");
+register();
+const app = createApp(App);
+app.use(store).mount("#app");

@@ -18,21 +18,38 @@
         </ul>
       </li>
     </ul>
+    <div class="sidebar-item import-button" @click="openImport">
+      Import Cards
+    </div>
+
+    <ImportBox 
+      :visible="isImportVisible" 
+      title="Import Cards" 
+      @confirm="handleImport" 
+      @close="closeImport" 
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import ImportBox from "./ImportBox.vue";
+import Toaster from "./Toaster.vue";
 import { allSets, userNames } from "../data";
 
 export default {
   name: "Sidebar",
+  components: {
+    ImportBox,
+    Toaster
+  },
   computed: {
     ...mapState(["users"]),
   },
   data() {
     return {
       items: [],
+      isImportVisible: false
     };
   },
   methods: {
@@ -40,6 +57,16 @@ export default {
       const left = this.$store.getters.getCards[id][set].length;
       const right = Object.keys(this.$store.getters.getCache[set]).length;
       return `${left}/${right}`;
+    },
+    openImport() {
+      this.isImportVisible = true;
+    },
+    closeImport() {
+      this.isImportVisible = false;
+    },
+    handleImport(text) {
+      console.log(text);
+      this.isImportVisible = false;
     },
     toggleExpand(index) {
       this.items[index].expanded = !this.items[index].expanded;
@@ -73,6 +100,7 @@ export default {
 
 <style scoped>
 .sidebar {
+  position: relative;
   width: 250px;
   background-color: #36393e;
   color: #ecf0f1;
@@ -115,5 +143,12 @@ export default {
 
 .sub-item:hover {
   color: #ecf0f1;
+}
+
+.import-button {
+  position: absolute;
+  box-sizing: border-box;
+  bottom: 10px;
+  width: 90%;
 }
 </style>

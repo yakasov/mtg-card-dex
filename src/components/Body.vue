@@ -22,12 +22,18 @@
         <div class="card-number">{{ card.number }}</div>
       </div>
     </div>
+    <Toaster ref="toast" />
   </div>
 </template>
 
 <script>
 import unknownImage from "@/assets/unknown.png";
+import Toaster from "./Toaster.vue";
+
 export default {
+  components: {
+    Toaster
+  },
   name: "Body",
   props: {
     set: {
