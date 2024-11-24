@@ -1,14 +1,19 @@
 <template>
   <div v-if="visible" class="import-overlay" @click.self="close">
     <div class="import-box">
-      <h2 class="import-title">{{ title }}</h2>
+      <div class="import-header">
+        <h2 class="import-title">{{ title }}</h2>
+        <select v-model="selectedUser" class="import-dropdown">
+          <option v-for="(userName, id) in users" :key="id" :value="id">{{ userName }}</option>
+        </select>
+      </div>
       <textarea 
         v-model="inputValue" 
         type="text" 
         class="import-input" 
         placeholder="Paste your card export from Moxfield here" 
       />
-      <button class="confirm-button" @click="confirm">
+      <button class="confirm-button" @click="confirm" :disabled="isButtonDisabled">
         Confirm
       </button>
     </div>
@@ -29,22 +34,32 @@ export default {
       type: Boolean,
       required: true,
     },
+    users: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    isButtonDisabled() {
+      return this.selectedUser === null || this.selectedUser === undefined || this.inputValue === "";
+    }
   },
   data() {
     return {
       inputValue: "",
+      selectedUser: null
     };
   },
   methods: {
     confirm() {
-      eventBus.emit("begin-import", this.inputValue);
+      eventBus.emit("begin-import", {input: this.inputValue, user: this.selectedUser });
       eventBus.emit("show-toast", { msg: "Beginning card import..." });
       this.inputValue = ""; 
       this.close();
     },
     close() {
       this.$emit("close");
-    }
+    },
   },
 };
 </script>
@@ -76,6 +91,7 @@ export default {
 }
 
 .import-title {
+  display: flex;
   font-size: 1.5rem;
   margin-bottom: 20px;
   text-align: center;
@@ -107,5 +123,27 @@ export default {
 
 .confirm-button:hover {
   background-color: #0056b3;
+}
+
+.import-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.import-dropdown {
+  background-color: #36393e;
+  color: #ffffff;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  outline: none;
+  margin-left: 20px; 
+}
+
+.disabled {
+  background-color: #36393e;
 }
 </style>

@@ -5,32 +5,30 @@ export default function register() {
   eventBus.on("begin-import", beginImport);
 }
 
-async function beginImport(input) {
+async function beginImport(params) {
+  const input = params.input;
   const cardDict = {};
-  const missingSets = [];
   input.split("\n").forEach((l) => {
-    const set = l.match(/\((.*?)\)/u)[1];
-    const id = l.match(/\)\s*(\d+)/u)[1];
+    const set = l.match(/\((.*?)\)/u);
+    const id = l.match(/\)\s*(\d+)/u);
 
-    if (!cardDict[set]) {
-      cardDict[set] = [];
+    if(set && id) {
+      if (!cardDict[set[1]]) {
+        cardDict[set[1]] = [];
+      }
+  
+      cardDict[set[1]].push(id[1]);
     }
-
-    cardDict[set].push(id);
   })
 
-  Object.keys(cardDict).forEach((k) => {
-    if (!store.getters.getCache[k]) {
-      missingSets.push(k);
-    }
-  });
-
-  if (missingSets.length) {
-    await fetch("https://jmcd.uk/mtg/createCardCache", {
-      method: "POST",
-      body: {
-        sets: JSON.stringify(missingSets)
-      }
-    })
-  }
+  await fetch("https://jmcd.uk/mtg/saveCards", {
+    method: "POST",
+    body: JSON.stringify({
+      cards: cardDict,
+      user: params.user
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
 }

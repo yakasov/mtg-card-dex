@@ -25,6 +25,7 @@
     <ImportBox 
       :visible="isImportVisible" 
       title="Import Cards" 
+      :users="userNames"
       @confirm="handleImport" 
       @close="closeImport" 
     />
@@ -34,14 +35,12 @@
 <script>
 import { mapState } from "vuex";
 import ImportBox from "./ImportBox.vue";
-import Toaster from "./Toaster.vue";
 import { allSets, userNames } from "../data";
 
 export default {
   name: "Sidebar",
   components: {
-    ImportBox,
-    Toaster
+    ImportBox
   },
   computed: {
     ...mapState(["users"]),
@@ -49,7 +48,8 @@ export default {
   data() {
     return {
       items: [],
-      isImportVisible: false
+      isImportVisible: false,
+      userNames: userNames
     };
   },
   methods: {
