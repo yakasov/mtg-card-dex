@@ -23,13 +23,13 @@ export default createStore({
         const cardsFetch = await fetch("https://jmcd.uk/mtg/getCards").then(
           (r) => r.json()
         );
-        const cards = cardsFetch.data;
+        const cards = cardsFetch.cards;
         const users = Object.keys(cards);
 
         const cacheFetch = await fetch("https://jmcd.uk/mtg/getCache").then(
           (r) => r.json()
         );
-        const cache = cacheFetch.data;
+        const cache = cacheFetch.results;
 
         commit("SET_CARDS", cards);
         commit("SET_USERS", users);

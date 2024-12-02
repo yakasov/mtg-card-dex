@@ -31,7 +31,6 @@ export default {
       this.$emit("close-panel");
     },
     formatOracleText(text) {
-      console.log(text);
       const replacements = {
         "{1}": "1️⃣",
         "{2}": "2️⃣",

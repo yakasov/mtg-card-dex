@@ -22,12 +22,12 @@
       Import Cards
     </div>
 
-    <ImportBox 
-      :visible="isImportVisible" 
-      title="Import Cards" 
+    <ImportBox
+      :visible="isImportVisible"
+      title="Import Cards"
       :users="userNames"
-      @confirm="handleImport" 
-      @close="closeImport" 
+      @confirm="handleImport"
+      @close="closeImport"
     />
   </div>
 </template>
@@ -40,7 +40,7 @@ import { allSets, userNames } from "../data";
 export default {
   name: "Sidebar",
   components: {
-    ImportBox
+    ImportBox,
   },
   computed: {
     ...mapState(["users"]),
@@ -49,13 +49,17 @@ export default {
     return {
       items: [],
       isImportVisible: false,
-      userNames: userNames
+      userNames: userNames,
     };
   },
   methods: {
     getCountString(id, set) {
-      const left = this.$store.getters.getCards[id][set].length;
-      const right = Object.keys(this.$store.getters.getCache[set]).length;
+      const left = this.$store.getters.getCards[id]?.filter(
+        (o) => o.set === set
+      ).length;
+      const right = Object.keys(
+        this.$store.getters.getCache.filter((o) => o.set === set)
+      ).length;
       return `${left}/${right}`;
     },
     openImport() {
@@ -65,7 +69,6 @@ export default {
       this.isImportVisible = false;
     },
     handleImport(text) {
-      console.log(text);
       this.isImportVisible = false;
     },
     toggleExpand(index) {
@@ -84,11 +87,11 @@ export default {
           return {
             id: u,
             name: userNames[u],
-            sets: Object.keys(this.$store.getters.getCards[u] || {})
-              .filter((k) => k !== "netWorth")
-              .map((sc) => {
-                return { code: sc, name: allSets[sc].name };
-              }),
+            sets: Array.from(
+              new Set((this.$store.getters.getCards[u] || {}).map((o) => o.set))
+            ).map((s) => {
+              return { code: s, name: allSets[s].name };
+            }),
             expanded: false,
           };
         });
@@ -132,6 +135,7 @@ export default {
 
 .sub-list {
   padding-left: 20px;
+  margin-bottom: 48px !important;
 }
 
 .sub-item {
@@ -146,9 +150,9 @@ export default {
 }
 
 .import-button {
-  position: absolute;
+  position: fixed;
   box-sizing: border-box;
   bottom: 10px;
-  width: 90%;
+  width: 210px;
 }
 </style>

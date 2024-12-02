@@ -7,17 +7,13 @@ export default function register() {
 
 async function beginImport(params) {
   const input = params.input;
-  const cardDict = {};
+  const cardDict = [];
   input.split("\n").forEach((l) => {
     const set = l.match(/\((.*?)\)/u);
     const id = l.match(/\)\s*(\d+)/u);
 
     if(set && id) {
-      if (!cardDict[set[1]]) {
-        cardDict[set[1]] = [];
-      }
-  
-      cardDict[set[1]].push(id[1]);
+      cardDict.push({ id: id[1], set: set[1] })
     }
   })
 

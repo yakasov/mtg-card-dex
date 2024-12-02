@@ -23,7 +23,6 @@ export default {
   },
   methods: {
     displayToast(toast) {
-      console.log(toast);
       this.message = toast.msg;
       this.visible = true;
 

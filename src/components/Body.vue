@@ -55,8 +55,11 @@ export default {
   },
   methods: {
     loadCards(obj) {
-      const cacheDict = this.$store.getters.getCache[obj.set];
-      const userCards = this.$store.getters.getCards[obj.user][obj.set];
+      if (!obj.user) {
+        return;
+      }
+      const cacheDict = this.$store.getters.getCache.filter((o) => o.set === obj.set);
+      const userCards = this.$store.getters.getCards[obj.user].filter((o) => o.set === obj.set);
       const cacheCards = [];
 
       Object.entries(cacheDict).forEach(([k, v]) => {
