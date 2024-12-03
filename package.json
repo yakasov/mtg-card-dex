@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "csv-parse": "^5.6.0",
     "gh-pages": "^6.2.0",
     "mitt": "^3.0.1",
     "vue": "^3.5.12",

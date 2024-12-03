@@ -1,4 +1,5 @@
 import eventBus from "./eventBus";
+import { parse } from "csv-parse/browser/esm/sync";
 
 export default function register() {
   eventBus.on("begin-import", beginImport);
@@ -7,15 +8,25 @@ export default function register() {
 async function beginImport(params) {
   const input = params.input;
   const cardDict = [];
-  input.split("\n").forEach((l) => {
-    const set = l.match(/\((.*?)\)/u);
-    const id = l.match(/\)\s*(\d+)/u);
 
-    if(set && id) {
-      cardDict.push({ id: id[1], set: set[1] })
-    }
-  })
-
+  if (input.slice(0, 7) === `"Count"`) {
+    // Moxfield collection export
+    const records = parse(input, { columns: true })
+    records.forEach((r) => {
+      cardDict.push({ id: r["Collector Number"], set: r["Edition"]})
+    })
+  } else {
+    // Try with Moxfield deck export
+    input.split("\n").forEach((l) => {
+      const set = l.match(/\((.*?)\)/u);
+      const id = l.match(/\)\s*(\d+)/u);
+  
+      if(set && id) {
+        cardDict.push({ id: id[1], set: set[1] })
+      }
+    })
+  }
+  
   await fetch("https://jmcd.uk/mtg/saveCards", {
     method: "POST",
     body: JSON.stringify({
