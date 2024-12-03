@@ -88,8 +88,8 @@ export default {
             sets: Array.from(
               new Set((this.$store.getters.getCards[u] || {}).map((o) => o.set))
             ).map((s) => {
-              return { code: s, name: allSets[s].name };
-            }),
+              return { code: s, name: allSets[s].name, order: allSets[s].order };
+            }).sort((a, b) => b.order - a.order),
             expanded: false,
           };
         });

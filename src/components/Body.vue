@@ -20,8 +20,8 @@
     <div class="body-content">
       <div
         class="card"
-        v-for="(card, index) in filteredCards"
-        :key="index"
+        v-for="card in filteredCards"
+        :key="card.number"
         @click="selectCard(card)"
       >
         <div class="card-title">{{ card.name }}</div>
@@ -74,7 +74,7 @@ export default {
       const cacheCards = [];
       const ownedCards = [];
 
-      Object.entries(cacheDict).forEach(([k, v]) => {
+      Object.values(cacheDict).forEach((v) => {
         const imageUrl = userCards.some((c) => c.id === v.id) ? v.image : unknownImage;
         const card = {
           bigImage: imageUrl,
@@ -82,7 +82,7 @@ export default {
           image: imageUrl.replace("normal", "small"),
           oracle_text: v.oracle_text,
           name: v.name,
-          number: k,
+          number: v.number,
         };
 
         cacheCards.push(card);
@@ -90,6 +90,9 @@ export default {
           ownedCards.push(card);
         }
       });
+
+      cacheCards.sort((a, b) => a.number - b.number);
+      ownedCards.sort((a, b) => a.number - b.number);
 
       this.cards = cacheCards;
       this.filteredCards = this.ownedFilter ? ownedCards : cacheCards;
