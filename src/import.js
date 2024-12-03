@@ -1,5 +1,4 @@
 import eventBus from "./eventBus";
-import store from "./store";
 
 export default function register() {
   eventBus.on("begin-import", beginImport);
@@ -26,5 +25,11 @@ async function beginImport(params) {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
+  }).then((r) => {
+    if (r.status === 200) {
+      eventBus.emit("show-toast", { msg: "Cards successfully imported!" });
+    } else {
+      eventBus.emit("show-toast", { msg: `Error importing cards, code ${r.status}` });
+    }
   })
 }

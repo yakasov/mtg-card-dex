@@ -57,9 +57,7 @@ export default {
       const left = this.$store.getters.getCards[id]?.filter(
         (o) => o.set === set
       ).length;
-      const right = Object.keys(
-        this.$store.getters.getCache.filter((o) => o.set === set)
-      ).length;
+      const right = allSets[set].count;
       return `${left}/${right}`;
     },
     openImport() {
@@ -68,7 +66,7 @@ export default {
     closeImport() {
       this.isImportVisible = false;
     },
-    handleImport(text) {
+    handleImport() {
       this.isImportVisible = false;
     },
     toggleExpand(index) {
@@ -125,7 +123,7 @@ export default {
   cursor: pointer;
   background-color: #424549;
   border-radius: 5px;
-  margin-bottom: 5px;
+  margin: 5px 0;
   transition: background-color 0.3s;
 }
 
@@ -135,11 +133,10 @@ export default {
 
 .sub-list {
   padding-left: 20px;
-  margin-bottom: 48px !important;
 }
 
 .sub-item {
-  padding: 5px 10px;
+  padding: 5px 20px;
   cursor: pointer;
   color: #bdc3c7;
   transition: color 0.3s;
@@ -150,9 +147,15 @@ export default {
 }
 
 .import-button {
-  position: fixed;
+  position: sticky;
   box-sizing: border-box;
-  bottom: 10px;
-  width: 210px;
+  bottom: 0;
+  margin: 16px 0 0;
+  background-color: #5865f2;
+  transition: background-color 0.3s;
+}
+
+.import-button:hover {
+  background-color: #7289da;
 }
 </style>

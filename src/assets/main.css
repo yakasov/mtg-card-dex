@@ -1,9 +1,30 @@
 @import "./base.css";
 
+html {
+  background-color: #282b30;
+}
+
 #app {
   display: flex;
   flex-direction: row;
   height: 100vh;
+}
+
+.none {
+  opacity: 0 !important;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.8s linear;
 }
 
 .sidebar {

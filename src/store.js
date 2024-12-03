@@ -34,6 +34,9 @@ export default createStore({
         commit("SET_CARDS", cards);
         commit("SET_USERS", users);
         commit("SET_CACHE", cache);
+
+        document.getElementById("app").classList.remove("none");
+        document.getElementById("app").classList.add("fade-in");
       } catch (error) {
         console.error("Error fetching data:", error);
       }

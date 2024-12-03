@@ -5,9 +5,18 @@
         type="text"
         placeholder="Search cards..."
         v-model="searchQuery"
-        @input="filterCards"
+        @input="filterBySearch"
       />
     </div>
+    <div class="filters">
+        <input 
+          class="filter-checkbox" 
+          type="checkbox"
+          v-model="ownedFilter"
+          @change="filterByOwned"
+        />
+        Filter by cards owned
+      </div>
     <div class="body-content">
       <div
         class="card"
@@ -45,6 +54,8 @@ export default {
     return {
       cards: [],
       filteredCards: [],
+      ownedCards: [],
+      ownedFilter: false,
       searchQuery: "",
     };
   },
@@ -61,26 +72,40 @@ export default {
       const cacheDict = this.$store.getters.getCache.filter((o) => o.set === obj.set);
       const userCards = this.$store.getters.getCards[obj.user].filter((o) => o.set === obj.set);
       const cacheCards = [];
+      const ownedCards = [];
 
       Object.entries(cacheDict).forEach(([k, v]) => {
-        const imageUrl = userCards.includes(v.id) ? v.image : unknownImage;
-        cacheCards.push({
+        const imageUrl = userCards.some((c) => c.id === v.id) ? v.image : unknownImage;
+        const card = {
           bigImage: imageUrl,
           flavour_text: v.flavour_text,
           image: imageUrl.replace("normal", "small"),
           oracle_text: v.oracle_text,
           name: v.name,
           number: k,
-        });
+        };
+
+        cacheCards.push(card);
+        if (imageUrl !== unknownImage) {
+          ownedCards.push(card);
+        }
       });
 
       this.cards = cacheCards;
-      this.filteredCards = cacheCards;
+      this.filteredCards = this.ownedFilter ? ownedCards : cacheCards;
+      this.ownedCards = ownedCards;
     },
     selectCard(card) {
       this.$emit("card-selected", card);
     },
-    filterCards() {
+    filterByOwned() {
+      if (this.ownedFilter) {
+        this.filteredCards = this.ownedCards;
+      } else {
+        this.filteredCards = this.cards;
+      }
+    },
+    filterBySearch() {
       const query = this.searchQuery.toLowerCase();
       this.filteredCards = this.cards.filter((card) =>
         card.name.toLowerCase().includes(query)
@@ -117,6 +142,15 @@ export default {
 
 .body-content:before {
   grid-column: span 12;
+}
+
+.filters {
+  background-color: #282b30;
+}
+
+.filter-checkbox {
+  margin-left: 24px;
+  margin-top: 24px;
 }
 
 .card {
