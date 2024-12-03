@@ -52,13 +52,13 @@ export default {
       };
 
       let returnText = "";
-      if (text.includes("\n") && text.includes("{")) {
+      if (text && text.includes("\n") && text.includes("{")) {
         const t = text.split("\n");
         returnText = `<p class="subheader">${t[0]}</p><p>${t
           .slice(1)
           .join()}</p>`;
       } else {
-        returnText = `<p>${text}</p>`;
+        returnText = `<p>${text || "Nothing to see here..."}</p>`;
       }
 
       // For replacing all {X} with actual icons
