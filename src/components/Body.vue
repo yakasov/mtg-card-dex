@@ -9,14 +9,18 @@
       />
     </div>
     <div class="filters">
-        <input 
-          class="filter-checkbox" 
+      <span>
+        <input
+          class="filter-checkbox"
           type="checkbox"
           v-model="ownedFilter"
           @change="filterByOwned"
         />
         Filter by cards owned
-      </div>
+      </span>
+      <h3 id="filter-set-title"></h3>
+      <div style="width: 181px" />
+    </div>
     <div class="body-content">
       <div
         class="card"
@@ -38,10 +42,11 @@
 <script>
 import unknownImage from "@/assets/unknown.png";
 import Toaster from "./Toaster.vue";
+import { allSets } from "../data";
 
 export default {
   components: {
-    Toaster
+    Toaster,
   },
   name: "Body",
   props: {
@@ -69,13 +74,19 @@ export default {
       if (!obj.user) {
         return;
       }
-      const cacheDict = this.$store.getters.getCache.filter((o) => o.set === obj.set);
-      const userCards = this.$store.getters.getCards[obj.user].filter((o) => o.set === obj.set);
+      const cacheDict = this.$store.getters.getCache.filter(
+        (o) => o.set === obj.set
+      );
+      const userCards = this.$store.getters.getCards[obj.user].filter(
+        (o) => o.set === obj.set
+      );
       const cacheCards = [];
       const ownedCards = [];
 
       Object.values(cacheDict).forEach((v) => {
-        const imageUrl = userCards.some((c) => c.id === v.id) ? v.image : unknownImage;
+        const imageUrl = userCards.some((c) => c.id === v.id)
+          ? v.image
+          : unknownImage;
         const card = {
           bigImage: imageUrl,
           flavour_text: v.flavour_text,
@@ -97,6 +108,8 @@ export default {
       this.cards = cacheCards;
       this.filteredCards = this.ownedFilter ? ownedCards : cacheCards;
       this.ownedCards = ownedCards;
+
+      document.getElementById("filter-set-title").innerText = allSets[obj.set].name;
     },
     selectCard(card) {
       this.$emit("card-selected", card);
@@ -137,10 +150,17 @@ export default {
   gap: 10px 10px;
   padding: 20px;
   background-color: #282b30;
-  overflow-y: auto;
   height: 100%;
   width: 100%;
   box-sizing: border-box;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 }
 
 .body-content:before {
@@ -148,12 +168,23 @@ export default {
 }
 
 .filters {
+  display: flex;
+  justify-content: space-between;
   background-color: #282b30;
 }
 
 .filter-checkbox {
   margin-left: 24px;
-  margin-top: 24px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+#filter-set-title {
+  margin-right: 24px;
+  margin-top: 9px;
+  margin-bottom: 9px;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 .card {

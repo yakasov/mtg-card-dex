@@ -75,6 +75,14 @@ export default {
     selectSet(user, set) {
       this.$emit("user-selected", { user, set });
     },
+    getSets(u) {
+      const cards = this.$store.getters.getCards[u] || {};
+      return Array.from(
+        new Set(cards.map((o) => o.set))
+      ).map((s) => {
+        return { code: s, name: allSets[s].name, length: cards.filter((c) => c.set === s).length }
+      }).sort((a, b) => b.length - a.length)
+    }
   },
   watch: {
     users: {
@@ -85,11 +93,7 @@ export default {
           return {
             id: u,
             name: userNames[u],
-            sets: Array.from(
-              new Set((this.$store.getters.getCards[u] || {}).map((o) => o.set))
-            ).map((s) => {
-              return { code: s, name: allSets[s].name, order: allSets[s].order };
-            }).sort((a, b) => b.order - a.order),
+            sets: this.getSets(u),
             expanded: false,
           };
         });
@@ -102,14 +106,21 @@ export default {
 <style scoped>
 .sidebar {
   position: relative;
-  width: 250px;
+  width: 20%;
   background-color: #36393e;
   color: #ecf0f1;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 20px 10px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 }
 
 .sidebar ul {
@@ -136,10 +147,18 @@ export default {
 }
 
 .sub-item {
-  padding: 5px 20px;
+  padding: 5px 5px;
   cursor: pointer;
   color: #bdc3c7;
   transition: color 0.3s;
+  font-size: 13px;
+
+  p {
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .sub-item:hover {

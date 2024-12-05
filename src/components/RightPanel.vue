@@ -86,10 +86,10 @@ export default {
 .right-panel {
   position: fixed;
   top: 0;
-  right: -300px;
-  width: 300px;
+  right: -18%;
+  width: 18%;
   height: 100%;
-  background-color: rgb(66, 69, 73, 0.9);
+  background-color: rgb(66, 69, 73, 0.95);
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;

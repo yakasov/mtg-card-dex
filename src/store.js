@@ -35,8 +35,8 @@ export default createStore({
         commit("SET_USERS", users);
         commit("SET_CACHE", cache);
 
-        document.getElementById("app").classList.remove("none");
-        document.getElementById("app").classList.add("fade-in");
+        document.getElementById("loading-screen").classList.add("fade-out");
+        setTimeout(() => document.getElementById("loading-screen").remove(), 500);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
