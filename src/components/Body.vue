@@ -58,6 +58,7 @@ export default {
   data() {
     return {
       cards: [],
+      currentSet: "",
       filteredCards: [],
       ownedCards: [],
       ownedFilter: false,
@@ -71,9 +72,10 @@ export default {
   },
   methods: {
     loadCards(obj) {
-      if (!obj.user) {
+      if (!obj.user || (obj.set && obj.set === this.currentSet)) {
         return;
       }
+
       const cacheDict = this.$store.getters.getCache.filter(
         (o) => o.set === obj.set
       );
@@ -87,6 +89,7 @@ export default {
         const imageUrl = userCards.some((c) => c.id === v.id)
           ? v.image
           : unknownImage;
+
         const card = {
           bigImage: imageUrl,
           flavour_text: v.flavour_text,
@@ -108,8 +111,10 @@ export default {
       this.cards = cacheCards;
       this.filteredCards = this.ownedFilter ? ownedCards : cacheCards;
       this.ownedCards = ownedCards;
+      this.currentSet = obj.set;
 
-      document.getElementById("filter-set-title").innerText = allSets[obj.set].name;
+      document.getElementById("filter-set-title").innerText =
+        allSets[obj.set].name;
     },
     selectCard(card) {
       this.$emit("card-selected", card);
