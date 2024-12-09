@@ -43,8 +43,8 @@ export default {
   background-color: #333;
   color: #fff;
   padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 0.9rem;
+  border-radius: 15px;
+  font-size: 1.4rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>

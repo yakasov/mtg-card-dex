@@ -5,6 +5,20 @@ export default function register() {
   eventBus.on("begin-import", beginImport);
 }
 
+let currentImport;
+setInterval(checkImport, 2500);
+
+async function checkImport() {
+  if (currentImport) {
+    await fetch(`https://jmcd.uk/mtg/getImportStatus/${currentImport}`).then((r) => r.json()).then((j) => {
+      if (!j.status) {
+        currentImport = null;
+        eventBus.emit("show-toast", { msg: "Cards successfully imported!" });
+      }
+    })
+  }
+}
+
 async function beginImport(params) {
   const input = params.input;
   const cardDict = [];
@@ -26,20 +40,21 @@ async function beginImport(params) {
       }
     })
   }
+
+  currentImport = Date.now();
   
   await fetch("https://jmcd.uk/mtg/saveCards", {
     method: "POST",
     body: JSON.stringify({
       cards: cardDict,
+      id: currentImport,
       user: params.user
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
   }).then((r) => {
-    if (r.status === 200) {
-      eventBus.emit("show-toast", { msg: "Cards successfully imported!" });
-    } else {
+    if (r.status !== 200) {
       eventBus.emit("show-toast", { msg: `Error importing cards, code ${r.status}` });
     }
   })
