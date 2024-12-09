@@ -71,6 +71,15 @@ export default {
     },
   },
   methods: {
+    alphanumericSort(arr) {
+      const f = (ar) => ar.sort((a, b) => parseInt(a.number) - parseInt(b.number));
+      const g = (ar) => ar.sort((a, b) => a.number - b.number);
+
+      const arr1 = f(arr.filter((e) => e.number.toString().match(/^[0-9a-z]+$/gu)));
+      const arr2 = g(arr.filter((e) => !e.number.toString().match(/^[0-9a-z]+$/gu)));
+
+      return arr1.concat(arr2);
+    },
     loadCards(obj) {
       if (!obj.user || (obj.set && obj.set === this.currentSet)) {
         return;
@@ -82,8 +91,8 @@ export default {
       const userCards = this.$store.getters.getCards[obj.user].filter(
         (o) => o.set === obj.set
       );
-      const cacheCards = [];
-      const ownedCards = [];
+      let cacheCards = [];
+      let ownedCards = [];
 
       Object.values(cacheDict).forEach((v) => {
         const imageUrl = userCards.some((c) => c.id === v.id)
@@ -105,8 +114,8 @@ export default {
         }
       });
 
-      cacheCards.sort((a, b) => a.number - b.number);
-      ownedCards.sort((a, b) => a.number - b.number);
+      cacheCards = this.alphanumericSort(cacheCards);
+      ownedCards = this.alphanumericSort(ownedCards);
 
       this.cards = cacheCards;
       this.filteredCards = this.ownedFilter ? ownedCards : cacheCards;
